@@ -1,0 +1,6 @@
+
+app:
+  Datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/springdemodb
+    username: postgres
+    password: password

@@ -17,7 +17,7 @@ public class PersonService {
     private final PersonDao personDAO;
 
     @Autowired
-    public PersonService(@Qualifier("fakeDao") PersonDao personDAO) {
+    public PersonService(@Qualifier("postgres") PersonDao personDAO) {
         this.personDAO = personDAO;
     }
     public int insertPerson(Person person) {
