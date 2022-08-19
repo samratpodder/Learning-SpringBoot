@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -22,17 +23,30 @@ public class PersonDataAccessService implements PersonDao{
 
     @Override
     public int addPerson(Person person) {
-        return PersonDao.super.addPerson(person);
+        UUID id = UUID.randomUUID();
+        return insertPerson(id, person);
     }
 
     @Override
     public int deletePersonbyID(UUID id) {
-        return 0;
+        String sql = "DELETE FROM person WHERE id='"+id+"'";
+        try {
+            jdbcTemplate.update(sql);
+        } catch (DataAccessException e){
+            return 0;
+        } 
+        return 1;
     }
 
     @Override
     public int insertPerson(UUID id, Person person) {
-        return 0;
+        String sql = "INSERT INTO PERSON(id,fullname) VALUES('"+id+"','"+person.getName()+"')";
+        try {
+            jdbcTemplate.update(sql);
+        } catch (DataAccessException e){
+            return 0;
+        } 
+        return 1;
     }
 
     @Override
@@ -64,7 +78,16 @@ public class PersonDataAccessService implements PersonDao{
 
     @Override
     public int updatePersonbyID(UUID id, Person person) {
-        return 0;
+        // if(deletePersonbyID(id)==0) return 0;
+        // if(insertPerson(id, person)==0) return 0;
+        // return 1;
+        String sql = "UPDATE PERSON SET FULLNAME=? WHERE ID=?";
+        try {
+            jdbcTemplate.update(sql,person.getName(),id);
+        } catch (DataAccessException e) {
+            return 0;
+        }
+        return 1;
     }
     
 }
